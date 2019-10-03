@@ -1,36 +1,47 @@
-import sun.java2d.cmm.lcms.LcmsServiceProvider;
+package Controller;
+
+import Server.Main;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+@Path("Inventory/")
 public class Inventory_Controller {
 
+    @GET
+    @Path("List")
+    @Produces(MediaType.APPLICATION_JSON)
+    public static void ListAllInventory() {
 
-    public static void LookUpItem() {
-
+        System.out.println("Inventory/List");
+        JSONArray list  = new JSONArray();
         try {
             //Selects all data from the database
             PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Inventory");
 
 
+            JSONObject item  = new JSONObject();
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
-            int ItemID = 0;
-            String Name;
-            Double Price;
-            String RoleName;
-            String Location;
-            int quantity;
+
             System.out.println("ItemID,Name,Price,Location,Quantity,RoleName");
             while (results.next()) {
-                ItemID = results.getInt(1);
-                Name = results.getString(2);
-                Price = results.getDouble(3);
-                RoleName = results.getString(6);
-                Location = results.getString(4);
-                quantity = results.getInt(5);
+                item.put("id",results.getInt(1));
+                item.put("Name", results.getString(2));
+                item.put("Price",results.getDouble(3));
+                item.put("Location", results.getString(4));
+                item.put("Quantity", results.getString(5));
+                item.put("RoleName",results.getInt(6));
 
-                System.out.println(ItemID + "," + Name + "," + Price + "," + Location + "," + quantity + "," + RoleName);
+
 
             }
 
@@ -41,6 +52,34 @@ public class Inventory_Controller {
 
         }
     }
+
+    @GET
+    @Path("get/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getThing(@PathParam("id") Integer id) throws Exception {
+        if (id == null) {
+            throw new Exception("Thing's 'id' is missing in the HTTP request's URL.");
+        }
+        System.out.println("thing/get/" + id);
+        JSONObject item = new JSONObject();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Name, Price, Location, Quantity FROM Inventory WHERE Id = ?");
+            ps.setInt(1, id);
+            ResultSet results = ps.executeQuery();
+            if (results.next()) {
+                item.put("id", id);
+                item.put("name", results.getString(1));
+                item.put("price", results.getString(2));
+                item.put("location", results.getString(3));
+                item.put("quantity" , results.getString(4));
+            }
+            return item.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to get item, please see server console for more info.\"}";
+        }
+    }
+
 
     public static void AddItem(String ItemName, Double Price, String Location, int Quantity, String RoleName) {
 
