@@ -61,7 +61,7 @@ public class PurchaseOrder_Controller {
 
     }
 
-    public static void UpdatePurchaseOrder(int PurchaseID ,String Date1,int UserID, int purchaseID){
+    public static void UpdatePurchaseOrder(int PurchaseID ,String Date1,int UserID){
 
         try{
 
@@ -70,8 +70,6 @@ public class PurchaseOrder_Controller {
             ps.setInt(3,PurchaseID);
             ps.setString(1,Date1);
             ps.setInt(2,UserID);
-            ps.setInt(4,purchaseID);
-
 
             ps.executeUpdate();
 

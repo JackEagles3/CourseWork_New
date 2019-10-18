@@ -1,5 +1,9 @@
 package Server;
 
+import Controller.PurchaseOrder_Controller;
+import Controller.SalesOrderDetails_Controller;
+import Controller.SalesOrder_Controller;
+import Controller.Supplier_Controller;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -9,6 +13,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.sqlite.SQLiteConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.function.Supplier;
 
 
 public class Main {
@@ -20,7 +25,7 @@ public class Main {
         openDatabase("Inventory Database.db");
         //Code for manipulating the data in the database
 
-        ResourceConfig config = new ResourceConfig();
+        /*ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");
         config.register(MultiPartFeature.class);
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
@@ -35,8 +40,12 @@ public class Main {
             server.join();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
+        PurchaseOrder_Controller.ReadPurchaseOrder();
+        PurchaseOrder_Controller.AddPurchaseOrder(1,"11/12/19",2,1);
+        Supplier_Controller.DeteleSalesOrderDetails(1);
+        SalesOrderDetails_Controller.UpdateSalesOrderDetails(1,2,12,10.00);
 
         closeDatabase();
     }

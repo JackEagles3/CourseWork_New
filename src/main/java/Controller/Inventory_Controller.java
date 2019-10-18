@@ -54,7 +54,7 @@ public class Inventory_Controller {
     }
 
     @GET
-    @Path("get/{id}")
+    @Path("LookUp/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getThing(@PathParam("id") Integer id) throws Exception {
         if (id == null) {
