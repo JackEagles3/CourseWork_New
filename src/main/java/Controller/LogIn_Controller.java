@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 
 public class LogIn_Controller {
 
+
     public  static void ShowUsers(){
 
         try{
@@ -39,7 +40,37 @@ public class LogIn_Controller {
 
     }
 
-    public static void WriteToDatabase(String UserName, String Password, String RoleName){
+    public  static void CheckPassword(String UserName, String Password){
+
+        try{
+            //Selects all data from the database
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Password FROM LogIn WHERE UserName = ?");
+
+            ps.setString(1,UserName);
+
+            ResultSet result = ps.executeQuery();
+            //Outputs all the data from the database
+            if (Password.equals(ps.executeQuery().getString(1))){
+                System.out.println("Correct");
+
+            }else {
+                System.out.println("Wrong Password");
+            }
+
+
+
+
+
+
+        }catch (Exception e){
+
+            System.out.println("Database error:" + e);
+
+        }
+
+    }
+
+    public static void AddUser(String UserName, String Password, String RoleName){
 
         try{
 
@@ -63,7 +94,7 @@ public class LogIn_Controller {
     }
 
     /** @noinspection unused*/
-    public static void UpdateDatabase(String Password, int UserId ){
+    public static void UpdateUser(String Password, int UserId ){
 
         try{
 
@@ -83,7 +114,7 @@ public class LogIn_Controller {
 
     }
 
-    public static void DeleteFromDatabase(int UserID){
+    public static void DeleteUser(int UserID){
         try{
 
             //Lets you delete from the Login table

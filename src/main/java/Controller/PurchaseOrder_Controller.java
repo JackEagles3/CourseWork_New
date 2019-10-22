@@ -22,7 +22,7 @@ public class PurchaseOrder_Controller {
 
             while (results.next()){
                 int PurchaseId = results.getInt(1);
-                PurchaseId += 1-1;
+
                 String Date = results.getString(2);
                 int UserID = results.getInt(3);
                 System.out.println(PurchaseId + " "+ UserID + " " + Date);
@@ -43,7 +43,7 @@ public class PurchaseOrder_Controller {
         try{
 
             //Lets you insert into the [Purchase Order] table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?,?)");
 
 
             //Sets the values of the columns

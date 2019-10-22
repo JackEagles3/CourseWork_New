@@ -1,9 +1,6 @@
 package Server;
 
-import Controller.PurchaseOrder_Controller;
-import Controller.SalesOrderDetails_Controller;
-import Controller.SalesOrder_Controller;
-import Controller.Supplier_Controller;
+import Controller.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -42,10 +39,7 @@ public class Main {
             e.printStackTrace();
         }*/
 
-        PurchaseOrder_Controller.ReadPurchaseOrder();
-        PurchaseOrder_Controller.AddPurchaseOrder(1,"11/12/19",2,1);
-        Supplier_Controller.DeteleSalesOrderDetails(1);
-        SalesOrderDetails_Controller.UpdateSalesOrderDetails(1,2,12,10.00);
+
 
         closeDatabase();
     }
