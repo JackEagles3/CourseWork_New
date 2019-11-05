@@ -1,13 +1,11 @@
 package Controller;
 
 import Server.Main;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import java.sql.PreparedStatement;
@@ -19,7 +17,7 @@ public class Inventory_Controller {
     @GET
     @Path("List")
     @Produces(MediaType.APPLICATION_JSON)
-    public static void ListAllInventory() {
+    public String ListAllInventory() {
 
         System.out.println("Inventory/List");
         JSONArray list  = new JSONArray();
@@ -28,33 +26,37 @@ public class Inventory_Controller {
             PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Inventory");
 
 
-            JSONObject item  = new JSONObject();
+
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
 
             System.out.println("ItemID,Name,Price,Location,Quantity,RoleName");
             while (results.next()) {
+                JSONObject item = new JSONObject();
                 item.put("id",results.getInt(1));
                 item.put("Name", results.getString(2));
                 item.put("Price",results.getDouble(3));
                 item.put("Location", results.getString(4));
                 item.put("Quantity", results.getString(5));
                 item.put("RoleName",results.getInt(6));
+                list.add(item);
 
 
 
             }
-
+            System.out.println("Success");
+            return list.toString();
 
         } catch (Exception e) {
 
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Unable to list items, please see server console for more info.\"}";
 
         }
     }
 
     @GET
-    @Path("LookUp/{id}")
+    @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getThing(@PathParam("id") Integer id) throws Exception {
         if (id == null) {
@@ -81,7 +83,11 @@ public class Inventory_Controller {
     }
 
 
-    public static void AddItem(String ItemName, Double Price, String Location, int Quantity, String RoleName) {
+    @POST
+    @Path("AddItem")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public static void AddItem(@FormDataParam("ItemName") String ItemName, @FormDataParam("Price") Double Price, @FormDataParam("Location") String Location, @FormDataParam("Quantity") int Quantity, @FormDataParam("RoleName") String RoleName) {
 
         try {
 
@@ -107,25 +113,41 @@ public class Inventory_Controller {
 
     }
 
-
-    public static void UpdateItemDetails(String UserName, int UserID, String Password, String RoleName) {
+    @POST
+    @Path("UpdateItem")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String UpdateItemDetails(@FormDataParam("ItemName") String ItemName, @FormDataParam("Price") double Price, @FormDataParam("Location") String Location, @FormDataParam("Quantity") int Quantity, @FormDataParam("RoleName") String RoleName, @FormDataParam("ItemId") int ItemId) {
 
         try {
 
             //Lets you insert into the [Sales Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Inventory SET  Username = ?, Password = ?, RoleName = ? WHERE UserID=?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Inventory SET  ItemName = ?, Price = ?, Location = ?, Quantity = ?, RoleName = ? WHERE ItemId=?");
+
+            ps.setString(1,ItemName);
+            ps.setDouble(2,Price);
+            ps.setString(3,Location);
+            ps.setInt(4, Quantity);
+            ps.setString(5, RoleName);
+            ps.setInt(6, ItemId);
 
 
             ps.executeUpdate();
-
+            return "{\"status\": \"OK\"}";
 
         } catch (Exception e) {
             System.out.println("Database Update error:" + e);
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
+
         }
 
     }
 
-    public static void DeteleItem(int ItemID) {
+    @POST
+    @Path("DeleteItem")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String DeteleItem(@FormDataParam("id") int ItemID) {
         try {
 
             //Lets you delete from the [Sales Order Details] table
@@ -135,12 +157,14 @@ public class Inventory_Controller {
 
 
             ps.executeUpdate();
-
+            return "{\"status\": \"OK\"}";
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
         }
     }
 
 }
+
 
