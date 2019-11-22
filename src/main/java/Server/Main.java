@@ -22,7 +22,7 @@ public class Main {
         openDatabase("Inventory Database.db");
         //Code for manipulating the data in the database
 
-        /*ResourceConfig config = new ResourceConfig();
+        ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");
         config.register(MultiPartFeature.class);
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
@@ -37,7 +37,7 @@ public class Main {
             server.join();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
 
 
