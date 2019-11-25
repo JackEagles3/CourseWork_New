@@ -1,13 +1,26 @@
 package Controller;
 
 import Server.Main;
+import org.eclipse.jetty.server.Authentication;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+@Path("PurchaseOrder/")
 public class PurchaseOrder_Controller {
 
-    public  static void ReadPurchaseOrder(){
+
+    @GET
+    @Path("ShowUsers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ReadPurchaseOrder(){
+
+        JSONArray list = new JSONArray();
 
         try{
             //Selects all data from the database
@@ -17,68 +30,85 @@ public class PurchaseOrder_Controller {
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
 
-
-
+            System.out.println("UserID,UserName,Password,RoleName");
 
             while (results.next()){
-                int PurchaseId = results.getInt(1);
 
-                String Date = results.getString(2);
-                int UserID = results.getInt(3);
-                System.out.println(PurchaseId + " "+ UserID + " " + Date);
+                JSONObject item = new JSONObject();
+                item.put("PurchaseId",results.getInt(1));
+                item.put("Date", results.getString(2));
+                item.put("UserID",results.getInt(3));
+
+                list.add(item);
 
             }
 
+            return list.toString();
 
         }catch (Exception e){
 
             System.out.println("Database error:" + e);
-
+            return "error";
         }
 
     }
 
-    public static void AddPurchaseOrder(int PurchaseID ,String Date1,int UserID, int Supplier){
+    @POST
+    @Path("AddPurchaseOrder")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("Date") String Date, @FormDataParam("UserId") int UserId, @FormDataParam("Supplier") int SupplierId) {
 
-        try{
+        try {
 
-            //Lets you insert into the [Purchase Order] table
+            //Lets you insert into the Login table
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?,?)");
 
+            //Sets the values of the columns
+
+            ps.setInt(1, id);
+            ps.setString(2, Date);
+            ps.setInt(3, UserId);
+            ps.setInt(4, SupplierId);
+
+            ps.executeUpdate();
+            return "{\"error\": \"Ok\"}";
+        } catch (Exception e) {
+            System.out.println("Database error:" + e);
+            return "{\"error\": \"Error\"}";
+        }
+    }
+
+    @POST
+    @Path("UpdatePurchaseOrder")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String UpdatePurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("Date") String Date, @FormDataParam("UserId") int UserId) {
+
+        try {
+
+            //Lets you insert into the Login table
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?,?)");
 
             //Sets the values of the columns
-            ps.setInt(1,PurchaseID);
-            ps.setString(2,Date1);
-            ps.setInt(3,UserID);
-            ps.setInt(4,Supplier);
+
+            ps.setInt(1, id);
+            ps.setString(2, Date);
+            ps.setInt(3, UserId);
+
 
             ps.executeUpdate();
-
-
-        }catch (Exception  e){
+            return "{\"error\": \"Ok\"}";
+        } catch (Exception e) {
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Error\"}";
         }
-
     }
 
-    public static void UpdatePurchaseOrder(int PurchaseID ,String Date1,int UserID){
-
-        try{
-
-            //Lets you insert into the [Purchase Order] table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Purchase Order] SET  Date = ?, UserID = ? WHERE PurchaseID=?");
-            ps.setInt(3,PurchaseID);
-            ps.setString(1,Date1);
-            ps.setInt(2,UserID);
-
-            ps.executeUpdate();
 
 
-        }catch (Exception  e){
-            System.out.println("Database Update error:" + e);
-        }
 
-    }
+
 
     public static void DetelePurchaseOrder(int PurchaseID){
         try{

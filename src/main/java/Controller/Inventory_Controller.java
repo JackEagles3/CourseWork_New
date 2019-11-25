@@ -5,14 +5,24 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.annotation.processing.Generated;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@Path("Inventory/")
+@Path("Inventory")
 public class Inventory_Controller {
+
+    @GET
+    @Path("Test")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String yeet(){
+        System.out.println("Yeet");
+        return "yeet";
+    }
+
 
     @GET
     @Path("List")
@@ -24,7 +34,6 @@ public class Inventory_Controller {
         try {
             //Selects all data from the database
             PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Inventory");
-
 
 
             //Outputs all the data from the database

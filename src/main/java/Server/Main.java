@@ -1,6 +1,5 @@
 package Server;
 
-import Controller.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -10,17 +9,14 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.sqlite.SQLiteConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.function.Supplier;
-
 
 public class Main {
 
     public static Connection db = null;
 
     public static void main(String[] args) {
-        // Opens Database
+
         openDatabase("Inventory Database.db");
-        //Code for manipulating the data in the database
 
         ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");
@@ -38,15 +34,12 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-        closeDatabase();
     }
 
 
 
- private static void openDatabase(String dbFile){
+
+    private static void openDatabase(String dbFile){
         //Creates a connection to the database
         try{
             Class.forName("org.sqlite.JDBC");

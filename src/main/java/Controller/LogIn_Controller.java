@@ -1,14 +1,25 @@
 package Controller;
 
 import Server.Main;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+
+@Path("LogIn/")
 public class LogIn_Controller {
 
+    @GET
+    @Path("ShowUsers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ShowUsers(){
 
-    public  static void ShowUsers(){
+        JSONArray list = new JSONArray();
 
         try{
             //Selects all data from the database
@@ -17,30 +28,35 @@ public class LogIn_Controller {
 
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
-            int UserID = 0;
-            String UserName;
-            String Pass;
-            String RoleName;
+
             System.out.println("UserID,UserName,Password,RoleName");
+
             while (results.next()){
-                UserID = results.getInt(1);
-                UserName = results.getString(2);
-                Pass = results.getString(3);
-                RoleName = results.getString(4);
-                System.out.println(UserName + "," + Pass + "," + RoleName);
+
+                JSONObject item = new JSONObject();
+                item.put("UserID",results.getInt(1));
+                item.put("UserName", results.getString(2));
+                item.put("Password",results.getString(3));
+                item.put("RoleName", results.getString(4));
+
+                list.add(item);
 
             }
 
+            return list.toString();
 
         }catch (Exception e){
 
             System.out.println("Database error:" + e);
-
+            return "error";
         }
 
     }
 
-    public  static void CheckPassword(String UserName, String Password){
+    @POST
+    @Path("CheckPassword")
+    @Produces(MediaType.APPLICATION_JSON)
+    public  String  CheckPassword(@FormDataParam("UserName") String UserName, @FormDataParam("Password") String Password){
 
         try{
             //Selects all data from the database
@@ -51,10 +67,10 @@ public class LogIn_Controller {
             ResultSet result = ps.executeQuery();
             //Outputs all the data from the database
             if (Password.equals(ps.executeQuery().getString(1))){
-                System.out.println("Correct");
+                return "{\"status\": \"Correct\"}";
 
             }else {
-                System.out.println("Wrong Password");
+                return "{\"status\": \"Correct\"}";
             }
 
 
@@ -63,35 +79,64 @@ public class LogIn_Controller {
 
 
         }catch (Exception e){
-
             System.out.println("Database error:" + e);
+            return "{\"status\": \"Error\"}";
+
 
         }
 
     }
 
-    public static void AddUser(String UserName, String Password, String RoleName){
+    @POST
+    @Path("AddUser")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String AddUser(@FormDataParam("UserName") String UserName, @FormDataParam("Password") String Password, @FormDataParam("RoleName") String RoleName) {
 
-        try{
+        try {
 
             //Lets you insert into the Login table
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO LogIn (UserName, Password, RoleName) VALUES (?,?,?)");
 
-
-            //Sets the values of the columns(UserID and UserName
+            //Sets the values of the columns
 
             ps.setString(1, UserName);
             ps.setString(2, Password);
             ps.setString(3, RoleName);
+            ps.executeUpdate();
+            return "{\"error\": \"Ok\"}";
+        } catch (Exception e) {
+            System.out.println("Database error:" + e);
+            return "{\"error\": \"Error\"}";
+        }
+    }
+
+
+
+    @POST
+    @Path("UpdateUser")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String UpdateUser(@FormDataParam("id") int UserId, @FormDataParam("Password") String Password) {
+
+        try {
+
+            //Lets you insert into the Login table
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE LogIn SET  Password = ? WHERE UserID=?");
+
+            //Sets the values of the columns
+
+            ps.setInt(2, UserId);
+            ps.setString(1, Password);
 
             ps.executeUpdate();
-
-
-        }catch (Exception  e){
+            return "{\"error\": \"Ok\"}";
+        } catch (Exception e) {
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Error\"}";
         }
-
     }
+
 
     /** @noinspection unused*/
     public static void UpdateUser(String Password, int UserId ){
