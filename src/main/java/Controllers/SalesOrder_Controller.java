@@ -1,4 +1,4 @@
-package Controller;
+package Controllers;
 
 import Server.Main;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -9,21 +9,20 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-@Path("PurchaseOrderDetails/")
 
-public class PurchaseOrderDetails_Controller {
-
+@Path("SalesOrder/")
+public class SalesOrder_Controller {
 
     @GET
-    @Path("ReadPurchaseOrderDetails")
+    @Path("ReadSaleOrder")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ReadPurchaseOrderDetails(){
+    public String ReadSaleOrder(){
 
         JSONArray list = new JSONArray();
 
         try{
             //Selects all data from the database
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Purchase Orders detail]");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Sales Order]");
 
 
             //Outputs all the data from the database
@@ -34,10 +33,10 @@ public class PurchaseOrderDetails_Controller {
             while (results.next()){
 
                 JSONObject item = new JSONObject();
-                item.put("PurchaseId",results.getInt(1));
-                item.put("ItemID", results.getString(2));
-                item.put("Quantity",results.getInt(3));
-                item.put("Price",results.getDouble(4));
+                item.put("SaleID",results.getInt(1));
+                item.put("Date", results.getString(2));
+                item.put("UserId",results.getInt(3));
+
 
                 list.add(item);
 
@@ -54,22 +53,22 @@ public class PurchaseOrderDetails_Controller {
     }
 
     @POST
-    @Path("AddPurchaseOrderDetail")
+    @Path("AddSaleOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
+    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId) {
 
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchases Order Details] (PurchaseID,ItemID, Quantity, Unit Price) VALUES (?,?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Sales Order] (SaleID,Date,UserID) VALUES (?,?,?)");
 
             //Sets the values of the columns
 
             ps.setInt(1, id);
-            ps.setInt(2, item);
-            ps.setInt(3, quantity);
-            ps.setInt(4, price);
+            ps.setString(2, Date);
+            ps.setInt(3, UserId);
+
 
             ps.executeUpdate();
             return "{\"error\": \"Ok\"}";
@@ -81,22 +80,22 @@ public class PurchaseOrderDetails_Controller {
     }
 
     @POST
-    @Path("UpdatePurchasesOrderDetails")
+    @Path("UpdateSalesOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdatePurchasesOrderDetails(@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
+    public String UpdateSalesOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId) {
 
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Purchases Order Details] SET  ItemID=?, Quantity=?, Unit Price=? WHERE PurchaseID=?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Sales Order] SET  Date = ?, UserID = ? WHERE SaleID=?");
 
             //Sets the values of the columns
 
-            ps.setInt(4, id);
-            ps.setInt(2, item);
-            ps.setInt(3, quantity);
-            ps.setInt(1, price);
+            ps.setInt(1, id);
+            ps.setString(2, Date);
+            ps.setInt(3, UserId);
+
 
             ps.executeUpdate();
             return "{\"error\": \"Ok\"}";
@@ -110,14 +109,13 @@ public class PurchaseOrderDetails_Controller {
 
 
 
-
-    public static void DeletePurchasesOrderDetails(int PurchaseID){
+    public static void DeteleSalesOrder(int SaleID){
         try{
 
-            //Lets you delete from the [Purchases Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Purchases Order Details] WHERE PurchaseID = ?");
+            //Lets you delete from the [Sales Order] table
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Sales Order] WHERE SaleID = ?");
 
-            ps.setInt(PurchaseID,1);
+            ps.setInt(1,SaleID);
 
             ps.executeUpdate();
 
@@ -127,6 +125,4 @@ public class PurchaseOrderDetails_Controller {
         }
     }
 
-
 }
-

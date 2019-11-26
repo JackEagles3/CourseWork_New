@@ -1,4 +1,4 @@
-package Controller;
+package Controllers;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -68,3 +68,4 @@ public class Client {
     }
 
 }
+

@@ -1,28 +1,18 @@
-package Controller;
+package Controllers;
 
 import Server.Main;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.annotation.processing.Generated;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@Path("Inventory")
+@Path("Inventory/")
 public class Inventory_Controller {
-
-    @GET
-    @Path("Test")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String yeet(){
-        System.out.println("Yeet");
-        return "yeet";
-    }
-
 
     @GET
     @Path("List")
@@ -71,7 +61,7 @@ public class Inventory_Controller {
         if (id == null) {
             throw new Exception("Thing's 'id' is missing in the HTTP request's URL.");
         }
-        System.out.println("thing/get/" + id);
+        System.out.println("get/" + id);
         JSONObject item = new JSONObject();
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT Name, Price, Location, Quantity FROM Inventory WHERE Id = ?");

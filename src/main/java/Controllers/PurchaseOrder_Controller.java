@@ -1,4 +1,4 @@
-package Controller;
+package Controllers;
 
 import Server.Main;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -10,19 +10,20 @@ import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@Path("SalesOrder/")
-public class SalesOrder_Controller {
+@Path("PurchaseOrder/")
+public class PurchaseOrder_Controller {
+
 
     @GET
-    @Path("ReadSaleOrder")
+    @Path("ShowUsers")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ReadSaleOrder(){
+    public String ReadPurchaseOrder(){
 
         JSONArray list = new JSONArray();
 
         try{
             //Selects all data from the database
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Sales Order]");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Purchase Order]");
 
 
             //Outputs all the data from the database
@@ -33,10 +34,9 @@ public class SalesOrder_Controller {
             while (results.next()){
 
                 JSONObject item = new JSONObject();
-                item.put("SaleID",results.getInt(1));
+                item.put("PurchaseId",results.getInt(1));
                 item.put("Date", results.getString(2));
-                item.put("UserId",results.getInt(3));
-
+                item.put("UserID",results.getInt(3));
 
                 list.add(item);
 
@@ -53,26 +53,25 @@ public class SalesOrder_Controller {
     }
 
     @POST
-    @Path("AddSaleOrder")
+    @Path("AddPurchaseOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId) {
+    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("Date") String Date, @FormDataParam("UserId") int UserId, @FormDataParam("Supplier") int SupplierId) {
 
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Sales Order] (SaleID,Date,UserID) VALUES (?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?,?)");
 
             //Sets the values of the columns
 
             ps.setInt(1, id);
             ps.setString(2, Date);
             ps.setInt(3, UserId);
-
+            ps.setInt(4, SupplierId);
 
             ps.executeUpdate();
             return "{\"error\": \"Ok\"}";
-
         } catch (Exception e) {
             System.out.println("Database error:" + e);
             return "{\"error\": \"Error\"}";
@@ -80,15 +79,15 @@ public class SalesOrder_Controller {
     }
 
     @POST
-    @Path("UpdateSalesOrder")
+    @Path("UpdatePurchaseOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateSalesOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId) {
+    public String UpdatePurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("Date") String Date, @FormDataParam("UserId") int UserId) {
 
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Sales Order] SET  Date = ?, UserID = ? WHERE SaleID=?");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?,?)");
 
             //Sets the values of the columns
 
@@ -99,7 +98,6 @@ public class SalesOrder_Controller {
 
             ps.executeUpdate();
             return "{\"error\": \"Ok\"}";
-
         } catch (Exception e) {
             System.out.println("Database error:" + e);
             return "{\"error\": \"Error\"}";
@@ -109,13 +107,15 @@ public class SalesOrder_Controller {
 
 
 
-    public static void DeteleSalesOrder(int SaleID){
+
+
+    public static void DetelePurchaseOrder(int PurchaseID){
         try{
 
-            //Lets you delete from the [Sales Order] table
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Sales Order] WHERE SaleID = ?");
+            //Lets you delete from the [Purchase Order] table
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Purchase Order] WHERE PurchaseID = ?");
 
-            ps.setInt(1,SaleID);
+            ps.setInt(1,PurchaseID);
 
             ps.executeUpdate();
 
