@@ -15,6 +15,34 @@ import java.sql.ResultSet;
 public class Location_Controller {
 
     @GET
+    @Path("get/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getLocation(@PathParam("id") Integer id) throws Exception {
+        if (id == null) {
+            throw new Exception("Thing's 'id' is missing in the HTTP request's URL.");
+        }
+        System.out.println("get/" + id);
+        JSONObject item = new JSONObject();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT LocationName FROM Location WHERE LocationId = ?");
+            ps.setInt(1, id);
+            ResultSet results = ps.executeQuery();
+            if (results.next()) {
+                item.put("id", id);
+                item.put("name", results.getString(1));
+
+            }
+            return item.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to get item, please see server console for more info.\"}";
+        }
+    }
+
+
+
+
+    @GET
     @Path("ListLocations")
     @Produces(MediaType.APPLICATION_JSON)
     public String ListLocation() {
@@ -57,7 +85,7 @@ public class Location_Controller {
     @Path("AddLocation")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public static void AddItem(@FormDataParam("Name") String name)
+    public String AddItem(@FormDataParam("Name") String name)
     {
         try {
 
@@ -73,18 +101,21 @@ public class Location_Controller {
 
             ps.executeUpdate();
 
+            return "{\"status\": \"OK\"}";
+
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);
+            return "{\"error\": \"OK\"}";
         }
 
     }
 
     @POST
-    @Path("UpdateItem")
+    @Path("UpdateLocation")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateItemDetails(@FormDataParam("Name") String name, @FormDataParam("id") int id) {
+    public String UpdateLocation(@FormDataParam("Name") String name, @FormDataParam("id") int id) {
 
         try {
 
@@ -108,16 +139,16 @@ public class Location_Controller {
     }
 
     @POST
-    @Path("DeleteItem")
+    @Path("DeleteLocation")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String DeteleItem(@FormDataParam("id") int ItemID) {
+    public String DeleteLocation(@FormDataParam("id") int Location) {
         try {
 
             //Lets you delete from the [Sales Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Inventory WHERE ItemID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Location WHERE Locationid = ?");
 
-            ps.setInt(1, ItemID);
+            ps.setInt(1, Location);
 
 
             ps.executeUpdate();
