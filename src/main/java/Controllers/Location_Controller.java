@@ -85,8 +85,11 @@ public class Location_Controller {
     @Path("AddLocation")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddItem(@FormDataParam("Name") String name)
+    public String AddItem(@FormDataParam("Name") String name,@CookieParam("token") String token)
     {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table

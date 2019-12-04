@@ -2,6 +2,7 @@
 
 function pageLoad() {
 
+
     let LocationHtml = '<table>' +
         '<tr>' +
         '<th>Id</th>' +
@@ -17,12 +18,21 @@ function pageLoad() {
                 `<td>${LocationName.id}</td>` +
                 `<td>${LocationName.Name}</td>` +
                 `<td class="last">` +
-                `<button class='editButton' data-id='${LocationName.id}'>Edit</button>` +
-                `<button class='deleteButton' data-id='${LocationName.id}'>Delete</button>` +
+                `<button class='editButton' data-id='${LocationName.id}'>Edit</button>  ` +
+                `<button class='deleteButton' data-id='${LocationName.id}'>Delete</button>  ` +
+                `<button class='viewButton' data-id='${LocationName.id}'>View Location</button>`+
                 `</td>` +
                 `</tr>`;
 
         }
+
+        LocationHtml += `<tr>` +
+            `<td></td>` +
+            `<td>All</td>` +
+            `<td class="last">` +
+            `<button class='viewButton' data-id='${LocationName.id}'>View Location</button>`+
+            `</td>` +
+            `</tr>`;
 
         LocationHtml += `</table>`;
 
@@ -39,14 +49,35 @@ function pageLoad() {
             button.addEventListener("click", deleteLocation);
         }
 
+        let viewButtons = document.getElementsByClassName("viewButton");
+        for (let button of viewButtons) {
+            button.addEventListener("click", viewLocation);
+        }
+
+        checkLogin();
+
     });
+
+
 
     document.getElementById("saveButton").addEventListener("click", saveEditLocation);
 
 
     document.getElementById("cancelButton").addEventListener("click", cancelEditLocation);
 
+
+
 }
+
+function viewLocation(event){
+
+    const location = event.target.getAttribute("data-id");
+
+    window.location.href = "http://localhost:8081/client/ItemDetails.html?location="+location;
+
+}
+
+
 
 function editLocation(event){
 
@@ -153,5 +184,46 @@ function deleteLocation(event) {
     }
 
 
+function checkLogin() {
+
+  
+
+    let username = Cookies.get("username");
+
+    let logInHTML = '';
+
+    if (username === undefined) {
+
+        let editButtons = document.getElementsByClassName("editButton");
+        for (let button of editButtons) {
+            button.style.visibility = "hidden";
+        }
+
+        let deleteButtons = document.getElementsByClassName("deleteButton");
+        for (let button of deleteButtons) {
+            button.style.visibility = "hidden";
+        }
+
+        logInHTML = "Not logged in. <a href='/client/login.html'>Log in</a>";
+
+    } else {
+
+        let editButtons = document.getElementsByClassName("editButton");
+        for (let button of editButtons) {
+            button.style.visibility = "visible";
+        }
+
+        let deleteButtons = document.getElementsByClassName("deleteButton");
+        for (let button of deleteButtons) {
+            button.style.visibility = "visible";
+        }
+
+        logInHTML = "Logged in as " + username + ". <a href='/client/login.html?logout'>Log out</a>";
+
+    }
+
+    document.getElementById("loggedInDetails").innerHTML = logInHTML;
+
+}
 
 

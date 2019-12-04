@@ -61,6 +61,7 @@ public class Inventory_Controller {
         if (id == null) {
             throw new Exception("Thing's 'id' is missing in the HTTP request's URL.");
         }
+
         System.out.println("get/" + id);
         JSONObject item = new JSONObject();
         try {
@@ -81,13 +82,43 @@ public class Inventory_Controller {
         }
     }
 
+    @GET
+    @Path("getLocation/{location}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ItemLocations(@PathParam("location") Integer location) throws Exception {
+
+        JSONArray list = new JSONArray();
+        System.out.println("get/" + location);
+
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT ItemID ,Name, Price, Quantity FROM Inventory WHERE Location = ?");
+            ps.setInt(1, location);
+            ResultSet results = ps.executeQuery();
+            while (results.next()) {
+                JSONObject item = new JSONObject();
+                item.put("id", results.getInt(1));
+                item.put("name", results.getString(2));
+                item.put("price", results.getString(3));
+                item.put("location", location);
+                item.put("quantity" , results.getString(4));
+                list.add(item);
+            }
+
+            return list.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"error\": \"Unable to get item, please see server console for more info.\"}";
+        }
+    }
 
     @POST
     @Path("AddItem")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public static void AddItem(@FormDataParam("ItemName") String ItemName, @FormDataParam("Price") Double Price, @FormDataParam("Location") String Location, @FormDataParam("Quantity") int Quantity, @FormDataParam("RoleName") String RoleName) {
-
+    public String AddItem(@CookieParam("token") String token,@FormDataParam("ItemName") String ItemName, @FormDataParam("Price") Double Price, @FormDataParam("Location") String Location, @FormDataParam("Quantity") int Quantity, @FormDataParam("RoleName") String RoleName) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -105,9 +136,12 @@ public class Inventory_Controller {
 
             ps.executeUpdate();
 
+            return "{\"Success\"}";
+
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);
+            return "{\"Error\"}";
         }
 
     }
@@ -146,7 +180,7 @@ public class Inventory_Controller {
     @Path("DeleteItem")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String DeteleItem(@FormDataParam("id") int ItemID) {
+    public String DeleteItem(@FormDataParam("id") int ItemID) {
         try {
 
             //Lets you delete from the [Sales Order Details] table

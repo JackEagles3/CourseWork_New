@@ -57,8 +57,10 @@ public class PurchaseOrderDetails_Controller {
     @Path("AddPurchaseOrderDetail")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
-
+    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price,@CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -84,8 +86,10 @@ public class PurchaseOrderDetails_Controller {
     @Path("UpdatePurchasesOrderDetails")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdatePurchasesOrderDetails(@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
-
+    public String UpdatePurchasesOrderDetails(@CookieParam("token") String token,@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -111,7 +115,10 @@ public class PurchaseOrderDetails_Controller {
 
 
 
-    public static void DeletePurchasesOrderDetails(int PurchaseID){
+    public String DeletePurchasesOrderDetails(int PurchaseID,@CookieParam("token") String token){
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try{
 
             //Lets you delete from the [Purchases Order Details] table
@@ -120,10 +127,11 @@ public class PurchaseOrderDetails_Controller {
             ps.setInt(PurchaseID,1);
 
             ps.executeUpdate();
-
+            return "{\"error\": \"Ok\"}";
 
         }catch (Exception  e){
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Error\"}";
         }
     }
 

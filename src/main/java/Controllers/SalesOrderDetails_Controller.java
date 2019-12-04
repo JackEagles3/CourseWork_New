@@ -57,8 +57,10 @@ public class SalesOrderDetails_Controller {
     @Path("AddSaleOrderDetail")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price) {
-
+    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price,@CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -86,8 +88,10 @@ public class SalesOrderDetails_Controller {
     @Path("UpdateSalesOrderDetails")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateSalesOrderDetails(@FormDataParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price) {
-
+    public String UpdateSalesOrderDetails(@FormDataParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price,@CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -113,6 +117,7 @@ public class SalesOrderDetails_Controller {
 
 
     public static void DeleteSalesOrderDetails(int SaleID){
+
         try{
 
             //Lets you delete from the [Sales Order Details] table

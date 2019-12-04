@@ -56,8 +56,10 @@ public class SalesOrder_Controller {
     @Path("AddSaleOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId) {
-
+    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId,@CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -83,8 +85,10 @@ public class SalesOrder_Controller {
     @Path("UpdateSalesOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateSalesOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId) {
-
+    public String UpdateSalesOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId,@CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -110,6 +114,8 @@ public class SalesOrder_Controller {
 
 
     public static void DeteleSalesOrder(int SaleID){
+
+
         try{
 
             //Lets you delete from the [Sales Order] table

@@ -57,8 +57,11 @@ public class Supplier_Controller {
     @Path("AddSupplier")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddSupplier(@FormDataParam("SupplierId") int SupplierId, @FormDataParam("SupplierName") String SupplierName, @FormDataParam("ItemID") int ItemID, @FormDataParam("price") double price) {
+    public String AddSupplier(@FormDataParam("SupplierId") int SupplierId, @FormDataParam("SupplierName") String SupplierName, @FormDataParam("ItemID") int ItemID, @FormDataParam("price") double price, @CookieParam("token") String token) {
 
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -85,8 +88,11 @@ public class Supplier_Controller {
     @Path("UpdateSupplier")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateSupplier(@FormDataParam("SupplierId") int SupplierId, @FormDataParam("SupplierName") String SupplierName, @FormDataParam("ItemID") int ItemID, @FormDataParam("price") double price) {
+    public String UpdateSupplier(@FormDataParam("SupplierId") int SupplierId, @FormDataParam("SupplierName") String SupplierName, @FormDataParam("ItemID") int ItemID, @FormDataParam("price") double price,@CookieParam("token") String token) {
 
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you insert into the Login table
@@ -112,7 +118,8 @@ public class Supplier_Controller {
 
 
 
-    public static void DeteleSalesOrderDetails(int SupplierID){
+    public String DeleteSupplier(int SupplierID){
+
         try{
 
             //Lets you delete from the [Supplier] table
@@ -122,9 +129,10 @@ public class Supplier_Controller {
             ps.setInt(1,SupplierID);
             ps.executeUpdate();
 
-
+            return "Success";
         }catch (Exception  e){
             System.out.println("Database error:" + e);
+            return "error";
         }
     }
 

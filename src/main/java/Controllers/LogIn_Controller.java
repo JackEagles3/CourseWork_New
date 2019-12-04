@@ -9,6 +9,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.UUID;
 
 
 @Path("LogIn/")
@@ -54,25 +55,46 @@ public class LogIn_Controller {
     }
 
     @POST
-    @Path("CheckPassword")
+    @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
-    public  String  CheckPassword(@FormDataParam("UserName") String UserName, @FormDataParam("Password") String Password){
+    public  String  login(@FormDataParam("UserName") String username, @FormDataParam("Password") String password){
 
         try{
             //Selects all data from the database
             PreparedStatement ps = Main.db.prepareStatement("SELECT Password FROM LogIn WHERE UserName = ?");
 
-            ps.setString(1,UserName);
+            ps.setString(1,username);
 
             ResultSet result = ps.executeQuery();
             //Outputs all the data from the database
-            if (Password.equals(ps.executeQuery().getString(1))){
-                return "{\"status\": \"Correct\"}";
+            if (result.next()){
 
-            }else {
-                return "{\"status\": \"Correct\"}";
+                String correctPass = result.getString(1);
+
+                if (password.equals(correctPass)){
+
+                    String token = UUID.randomUUID().toString();
+
+                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE LogIn SET Token = ? where UserName = ?");
+                    ps2.setString(1,token);
+                    ps2.setString(2,username);
+                    ps2.executeUpdate();
+
+                    JSONObject user = new JSONObject();
+                    user.put("username", username);
+                    user.put("token", token);
+
+                    return user.toString();
+
+
+                }else{
+                    return "{\"error\": \"Incorect password!\"}";
+                }
+
+
+            }else{
+                return "{\"error\": \"Inccorect User!\"}";
             }
-
 
 
 
@@ -86,6 +108,55 @@ public class LogIn_Controller {
         }
 
     }
+
+    @POST
+    @Path("logout")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String logoutUser(@CookieParam("token") String token) {
+
+        try {
+
+            System.out.println("user/logout");
+
+            PreparedStatement ps1 = Main.db.prepareStatement("SELECT UserName FROM LogIn WHERE Token = ?");
+            ps1.setString(1, token);
+            ResultSet logoutResults = ps1.executeQuery();
+            if (logoutResults.next()) {
+
+                int id = logoutResults.getInt(1);
+
+                PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Login SET Token = NULL WHERE UserID = ?");
+                ps2.setInt(1, id);
+                ps2.executeUpdate();
+
+                return "{\"status\": \"OK\"}";
+            } else {
+
+                return "{\"error\": \"Invalid token!\"}";
+
+            }
+
+        } catch (Exception exception){
+            System.out.println("Database error during /user/logout: " + exception.getMessage());
+            return "{\"error\": \"Server side error!\"}";
+        }
+
+    }
+
+    public static boolean validToken(String token) {
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM LogIn WHERE Token = ?");
+            ps.setString(1, token);
+            ResultSet logoutResults = ps.executeQuery();
+            return logoutResults.next();
+        } catch (Exception exception) {
+            System.out.println("Database error during /user/logout: " + exception.getMessage());
+            return false;
+        }
+    }
+
+
 
     @POST
     @Path("AddUser")
