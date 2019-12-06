@@ -30,11 +30,11 @@ h1 {
 
 #loginButton {
     width: 200px;
-    background-color: cornflowerblue;
+    background-color: #ed2fc4;
 }
 
 #loginButton:hover {
-    background-color: dodgerblue;
+    background-color: #ff01a2;
 }
 
 #loggedInDetails {
@@ -46,17 +46,22 @@ h1 {
 
 .deleteButton, #cancelButton {
     visibility: hidden;
-    background-color: indianred;
+    background-color: #2C29C0;
     margin-left: 10px;
 }
 
 .editButton {
     visibility: hidden;
-    background-color: silver;
+    background-color: #2c29c0;
 }
 
-.editButton, .deleteButton, #saveButton, #cancelButton, #loginButton {
-    color: black;
+.viewButton {
+    visibility: hidden;
+    background-color: #2C29C0;
+}
+
+.editButton, .deleteButton, #saveButton, #cancelButton, #loginButton, .viewButton {
+    color: #000000;
     font-size: 14px;
     border: none;
     padding: 8px;

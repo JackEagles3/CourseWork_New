@@ -204,7 +204,13 @@ function checkLogin() {
             button.style.visibility = "hidden";
         }
 
-        logInHTML = "Not logged in. <a href='/client/login.html'>Log in</a>";
+        let viewButtons = document.getElementsByClassName("viewButton");
+        for (let button of viewButtons) {
+            button.style.visibility = "hidden";
+        }
+
+
+        document.getElementById("SignIn").innerHTML = `<button onclick="window.location.href = '/client/login.html'">Log In</button>`;
 
     } else {
 
@@ -218,7 +224,13 @@ function checkLogin() {
             button.style.visibility = "visible";
         }
 
-        logInHTML = "Logged in as " + username + ". <a href='/client/login.html?logout'>Log out</a>";
+        let viewButtons = document.getElementsByClassName("viewButton");
+        for (let button of viewButtons) {
+            button.style.visibility = "visible";
+        }
+
+        document.getElementById("SignIn").innerHTML = `<button onclick="window.location.href = '/client/login.html?logout'">Log Out</button>`;
+
 
     }
 

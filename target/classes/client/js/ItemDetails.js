@@ -5,15 +5,17 @@ function ToIndexPage(){
 function editItem() {
 
 
+
 }
 
 function pageLoad(){
     debugger;
-    let LocationHtml = '<table>' +
+    let LocationHtml = '<table border="1">' +
         '<tr>' +
         '<th>Id</th>' +
-        '<th class="last">Name</th>' +
-
+        '<th>Name</th>' +
+        '<th>Price</th>' +
+        '<th class="last">Quantity</th>' +
         '</tr>';
 
 
@@ -24,7 +26,7 @@ function pageLoad(){
     ).then(response => response.json()
     ).then(location => {
 
-        document.getElementById("ItemLocations").innerText += " "+ location.name;
+        document.getElementById("ItemLocations").innerText += "Item Details in "+ location.name;
 
         fetch('/Inventory/getLocation/' + location.id, {method: 'get'}).then(response => response.json()).then(Item => {
 
@@ -34,7 +36,9 @@ function pageLoad(){
                 LocationHtml += `<tr>` +
                     `<td>${ItemName.id}</td>` +
                     `<td>${ItemName.name}</td>` +
-                    `<td class="last">` +
+                    `<td>${ItemName.price}</td>` +
+                    `<td>${ItemName.quantity}</td>` +
+
                     `<button class='editButton' data-id='${ItemName.id}'>Edit</button>  ` +
                     `<button class='deleteButton' data-id='${ItemName.id}'>Delete</button>  ` +
                     `</td>` +
@@ -61,7 +65,7 @@ function pageLoad(){
 
     }else {
 
-        document.getElementById("ItemLocations").innerText += " all locations";
+        document.getElementById("ItemLocations").innerText += "Item Details in every locations";
 
         fetch('/Inventory/List', {method: 'get'}).then(response => response.json()).then(Item => {
 
@@ -71,7 +75,8 @@ function pageLoad(){
                 LocationHtml += `<tr>` +
                     `<td>${ItemName.id}</td>` +
                     `<td>${ItemName.Name}</td>` +
-                    `<td class="last">` +
+                    `<td>${ItemName.Price}</td>` +
+                    `<td>${ItemName.Quantity}</td>` +
                     `<button class='editButton' data-id='${ItemName.id}'>Edit</button>  ` +
                     `<button class='deleteButton' data-id='${ItemName.id}'>Delete</button>  ` +
                     `</td>` +
