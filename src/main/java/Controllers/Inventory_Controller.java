@@ -17,34 +17,59 @@ public class Inventory_Controller {
     @GET
     @Path("List")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ListAllInventory() {
+    public String ListAllInventory(@CookieParam("Role") String Role) {
 
         System.out.println("Inventory/List");
         JSONArray list  = new JSONArray();
         try {
             //Selects all data from the database
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Inventory");
+
+            if (Role.equals("Owner")) {
+                PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Inventory");
+
+                //Outputs all the data from the database
+                ResultSet results = ps.executeQuery();
+
+                System.out.println("ItemID,Name,Price,Location,Quantity,RoleName");
+                while (results.next()) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", results.getInt(1));
+                    item.put("Name", results.getString(2));
+                    item.put("Price", results.getDouble(3));
+                    item.put("Location", results.getString(4));
+                    item.put("Quantity", results.getString(5));
+                    item.put("RoleName", results.getInt(6));
+                    list.add(item);
 
 
-            //Outputs all the data from the database
-            ResultSet results = ps.executeQuery();
+                }
+                System.out.println("Success");
+                return list.toString();
 
-            System.out.println("ItemID,Name,Price,Location,Quantity,RoleName");
-            while (results.next()) {
-                JSONObject item = new JSONObject();
-                item.put("id",results.getInt(1));
-                item.put("Name", results.getString(2));
-                item.put("Price",results.getDouble(3));
-                item.put("Location", results.getString(4));
-                item.put("Quantity", results.getString(5));
-                item.put("RoleName",results.getInt(6));
-                list.add(item);
+            }else {
+                PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Inventory where RoleName = ?");
+
+                ps.setString(1, Role);
+                //Outputs all the data from the database
+                ResultSet results = ps.executeQuery();
+
+                System.out.println("ItemID,Name,Price,Location,Quantity,RoleName");
+                while (results.next()) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", results.getInt(1));
+                    item.put("Name", results.getString(2));
+                    item.put("Price", results.getDouble(3));
+                    item.put("Location", results.getString(4));
+                    item.put("Quantity", results.getString(5));
+                    item.put("RoleName", results.getInt(6));
+                    list.add(item);
 
 
+                }
+                System.out.println("Success");
+                return list.toString();
 
             }
-            System.out.println("Success");
-            return list.toString();
 
         } catch (Exception e) {
 
@@ -85,14 +110,15 @@ public class Inventory_Controller {
     @GET
     @Path("getLocation/{location}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ItemLocations(@PathParam("location") Integer location) throws Exception {
+    public String ItemLocations(@PathParam("location") Integer location, @CookieParam("Role") String Role) throws Exception {
 
         JSONArray list = new JSONArray();
         System.out.println("get/" + location);
 
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT ItemID ,Name, Price, Quantity FROM Inventory WHERE Location = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT ItemID ,Name, Price, Quantity FROM Inventory WHERE Location = ? AND RoleName ALL");
             ps.setInt(1, location);
+            //ps.setString(2, "Any");
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 JSONObject item = new JSONObject();

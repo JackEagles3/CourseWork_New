@@ -11,7 +11,7 @@ function pageLoad() {
 
 function login(event) {
 
-    debugger;
+
     event.preventDefault();
 
     const form = document.getElementById("loginForm");
@@ -27,10 +27,18 @@ function login(event) {
 
             Cookies.set("username", responseData.UserName);
             Cookies.set("token", responseData.token);
+            Cookies.set("Role", responseData.Role);
+
+            console.log(Cookies.toString())
+
+
+
 
             window.location.href = '/client/index.html';
         }
     });
+
+
 }
 
 function logout() {
@@ -46,6 +54,7 @@ function logout() {
 
             Cookies.remove("username");
             Cookies.remove("token");
+            Cookies.remove("Role")
 
             window.location.href = '/client/index.html';
 

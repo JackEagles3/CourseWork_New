@@ -9,8 +9,8 @@ function editItem() {
 }
 
 function pageLoad(){
-    debugger;
-    let LocationHtml = '<table border="1">' +
+
+    let LocationHtml = '<table>' +
         '<tr>' +
         '<th>Id</th>' +
         '<th>Name</th>' +
@@ -32,13 +32,13 @@ function pageLoad(){
 
             for (let ItemName of Item) {
 
-
+                debugger;
                 LocationHtml += `<tr>` +
                     `<td>${ItemName.id}</td>` +
-                    `<td>${ItemName.name}</td>` +
+                    `<td class="ItemNames">${ItemName.name}</td>` +
                     `<td>${ItemName.price}</td>` +
                     `<td>${ItemName.quantity}</td>` +
-
+                    `<td class="last">` +
                     `<button class='editButton' data-id='${ItemName.id}'>Edit</button>  ` +
                     `<button class='deleteButton' data-id='${ItemName.id}'>Delete</button>  ` +
                     `</td>` +
@@ -53,11 +53,13 @@ function pageLoad(){
             let editButtons = document.getElementsByClassName("editButton");
             for (let button of editButtons) {
                 button.addEventListener("click", editItem);
+                button.style.visibility = "visible";
             }
 
             let deleteButtons = document.getElementsByClassName("deleteButton");
             for (let button of deleteButtons) {
                 button.addEventListener("click", deleteItem);
+                button.style.visibility = "visible";
             }
 
         });
@@ -72,13 +74,14 @@ function pageLoad(){
             for (let ItemName of Item) {
 
 
-                LocationHtml += `<tr>` +
+                LocationHtml += `<tr class ="ItemRow">` +
                     `<td>${ItemName.id}</td>` +
-                    `<td>${ItemName.Name}</td>` +
+                    `<td class="ItemName">${ItemName.Name}</td>` +
                     `<td>${ItemName.Price}</td>` +
                     `<td>${ItemName.Quantity}</td>` +
-                    `<button class='editButton' data-id='${ItemName.id}'>Edit</button>  ` +
-                    `<button class='deleteButton' data-id='${ItemName.id}'>Delete</button>  ` +
+                    `<td class="last">` +
+                    `<button class='editButton' data-id='${ItemName.id}'>Edit</button>` +
+                    `<button class='deleteButton' data-id='${ItemName.id}'>Delete</button>` +
                     `</td>` +
                     `</tr>`;
 
@@ -91,11 +94,13 @@ function pageLoad(){
             let editButtons = document.getElementsByClassName("editButton");
             for (let button of editButtons) {
                 button.addEventListener("click", editItem);
+                button.style.visibility = "visible";
             }
 
             let deleteButtons = document.getElementsByClassName("deleteButton");
             for (let button of deleteButtons) {
                 button.addEventListener("click", deleteItem);
+                button.style.visibility = "visible";
             }
 
         });
@@ -103,6 +108,18 @@ function pageLoad(){
 
 
 }
+
+
+function addItem(){
+
+    window.location.href = "http://localhost:8081/client/AddItem.html";
+}
+
+function editItem(){
+    window.location.href = "http://localhost:8081/client/AddItem.html";
+
+}
+
 
 function deleteItem(event) {
 
@@ -127,5 +144,24 @@ function deleteItem(event) {
             }
         );
     }
+
+}
+
+
+function SearchFunction(){
+    debugger;
+    let input = document.getElementById('searchbar').value;
+    input=input.toLowerCase();
+    let x = document.getElementsByClassName('ItemName');
+    let y = document.getElementsByClassName('ItemRow');
+    for (i = 0; i < x.length; i++) {
+        if (!x[i].innerHTML.toLowerCase().includes(input)) {
+            y[i].style.visibility="hidden";
+        }
+        else {
+            y[i].style.visibility="visible";
+        }
+    }
+
 
 }
