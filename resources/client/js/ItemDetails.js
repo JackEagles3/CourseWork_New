@@ -32,7 +32,7 @@ function pageLoad(){
 
             for (let ItemName of Item) {
 
-                debugger;
+
                 LocationHtml += `<tr>` +
                     `<td>${ItemName.id}</td>` +
                     `<td class="ItemNames">${ItemName.name}</td>` +
@@ -149,7 +149,7 @@ function deleteItem(event) {
 
 
 function SearchFunction(){
-    debugger;
+
     let input = document.getElementById('searchbar').value;
     input=input.toLowerCase();
     let x = document.getElementsByClassName('ItemName');

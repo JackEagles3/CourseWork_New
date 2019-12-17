@@ -9,9 +9,14 @@ h1 {
     color: #12710a;
 }
 
+.tables{
+
+    border-style: groove;
+}
+
 #content {
-    background-color: #ff0c18;
-    width: 1000px;
+    background-color: #ff0e11;
+    width: 60%;
     margin: 0 auto;
     min-height: 600px;
     padding: 32px;

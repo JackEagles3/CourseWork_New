@@ -116,21 +116,41 @@ public class Inventory_Controller {
         System.out.println("get/" + location);
 
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT ItemID ,Name, Price, Quantity FROM Inventory WHERE Location = ? AND RoleName ALL");
-            ps.setInt(1, location);
-            //ps.setString(2, "Any");
-            ResultSet results = ps.executeQuery();
-            while (results.next()) {
-                JSONObject item = new JSONObject();
-                item.put("id", results.getInt(1));
-                item.put("name", results.getString(2));
-                item.put("price", results.getString(3));
-                item.put("location", location);
-                item.put("quantity" , results.getString(4));
-                list.add(item);
-            }
 
-            return list.toString();
+            if (Role.equals("Owner")) {
+                PreparedStatement ps = Main.db.prepareStatement("SELECT ItemID ,Name, Price, Quantity FROM Inventory WHERE Location = ?");
+                ps.setInt(1, location);
+                //ps.setString(2, "Any");
+                ResultSet results = ps.executeQuery();
+                while (results.next()) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", results.getInt(1));
+                    item.put("name", results.getString(2));
+                    item.put("price", results.getString(3));
+                    item.put("location", location);
+                    item.put("quantity", results.getString(4));
+                    list.add(item);
+                }
+
+                return list.toString();
+            }else{
+                PreparedStatement ps = Main.db.prepareStatement("SELECT ItemID ,Name, Price, Quantity FROM Inventory WHERE Location = ? and RoleName=?");
+                ps.setInt(1, location);
+                ps.setString(2,Role);
+                //ps.setString(2, "Any");
+                ResultSet results = ps.executeQuery();
+                while (results.next()) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", results.getInt(1));
+                    item.put("name", results.getString(2));
+                    item.put("price", results.getString(3));
+                    item.put("location", location);
+                    item.put("quantity", results.getString(4));
+                    list.add(item);
+                }
+
+                return list.toString();
+            }
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"error\": \"Unable to get item, please see server console for more info.\"}";

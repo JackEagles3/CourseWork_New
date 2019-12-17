@@ -3,7 +3,7 @@
 function pageLoad() {
 
 
-    let LocationHtml = '<table>' +
+    let LocationHtml = '<table class = "tables" border="1" >' +
         '<tr>' +
         '<th>Id</th>' +
         '<th class="last">Name</th>' +
@@ -73,7 +73,7 @@ function viewLocation(event){
 
     const location = event.target.getAttribute("data-id");
 
-    window.location.href = "http://localhost:8081/client/ItemDetails.html?location="+location;
+    window.location.href = "/client/ItemDetails.html?location="+location;
 
 }
 
@@ -237,5 +237,8 @@ function checkLogin() {
     document.getElementById("loggedInDetails").innerHTML = logInHTML;
 
 }
+
+function LoadSalesOrder(){ window.location.href = "/client/saleOrder.html"}
+function LoadPurchaseOrder(){ window.location.href = "/client/purchaseOrder.html"}
 
 
