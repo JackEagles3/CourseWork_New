@@ -5,6 +5,7 @@ function pageLoad() {
         logout();
     } else {
         document.getElementById("loginButton").addEventListener("click", login);
+        document.getElementById("newUser").addEventListener("click", newUser);
     }
 
 }
@@ -12,31 +13,48 @@ function pageLoad() {
 function login(event) {
 
 
-    event.preventDefault();
+    if ((document.getElementById("loginButton").innerText) === "Add user"){
+        event.preventDefault();
 
-    const form = document.getElementById("loginForm");
-    const formData = new FormData(form);
+        const form = document.getElementById("loginForm");
+        const formData = new FormData(form);
 
-    fetch("/LogIn/login", {method: 'post', body: formData}
-    ).then(response => response.json()
-    ).then(responseData => {
+        fetch("/LogIn/AddUser", {method: 'post', body: formData}
+        ).then(response => response.json()
+        ).then(responseData => {
 
-        if (responseData.hasOwnProperty('error')) {
-            alert(responseData.error);
-        } else {
+            if (responseData.hasOwnProperty('error')) {
+                alert(responseData.error);
+            } else {
+                pageLoad();
+            }
+        });
 
-            Cookies.set("username", responseData.UserName);
-            Cookies.set("token", responseData.token);
-            Cookies.set("Role", responseData.Role);
+    }else {
+        event.preventDefault();
 
-            console.log(Cookies.toString())
+        const form = document.getElementById("loginForm");
+        const formData = new FormData(form);
+
+        fetch("/LogIn/login", {method: 'post', body: formData}
+        ).then(response => response.json()
+        ).then(responseData => {
+
+            if (responseData.hasOwnProperty('error')) {
+                alert(responseData.error);
+            } else {
+
+                Cookies.set("username", responseData.UserName);
+                Cookies.set("token", responseData.token);
+                Cookies.set("Role", responseData.Role);
+
+                console.log(Cookies.toString())
 
 
-
-
-            window.location.href = '/client/index.html';
-        }
-    });
+                window.location.href = '/client/index.html';
+            }
+        });
+    }
 
 
 }
@@ -60,5 +78,18 @@ function logout() {
 
         }
     });
+
+}
+
+function newUser(){
+    if (document.getElementById("newUser").innerText === "New User") {
+        document.getElementById("H").innerText = "New User";
+        document.getElementById("loginButton").innerText = "Add user";
+        document.getElementById("newUser").innerText = "Log In"
+    }else{
+        document.getElementById("H").innerText = "Please log in to continue...";
+        document.getElementById("loginButton").innerText = "LogIn";
+        document.getElementById("newUser").innerText = "New User"
+    }
 
 }

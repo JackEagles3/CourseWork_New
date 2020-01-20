@@ -164,7 +164,7 @@ public class LogIn_Controller {
     @Path("AddUser")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddUser(@FormDataParam("UserName") String UserName, @FormDataParam("Password") String Password, @FormDataParam("RoleName") String RoleName) {
+    public String AddUser(@FormDataParam("UserName") String UserName, @FormDataParam("Password") String Password) {
 
         try {
 
@@ -175,9 +175,12 @@ public class LogIn_Controller {
 
             ps.setString(1, UserName);
             ps.setString(2, Password);
-            ps.setString(3, RoleName);
+            ps.setString(3, "Default");
             ps.executeUpdate();
+            System.out.println("Added");
             return "{\"error\": \"Ok\"}";
+
+
         } catch (Exception e) {
             System.out.println("Database error:" + e);
             return "{\"error\": \"Error\"}";
@@ -211,28 +214,14 @@ public class LogIn_Controller {
     }
 
 
-    /** @noinspection unused*/
-    public static void UpdateUser(String Password, int UserId ){
-
-        try{
-
-            //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE LogIn SET  Password = ? WHERE UserID=?");
-
-
-            ps.setString(1, Password);
-            ps.setInt(2, UserId);
-
-            ps.executeUpdate();
-
-
-        }catch (Exception  e){
-            System.out.println("Database Update error:" + e);
+    @POST
+    @Path("DeleteUser")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String DeleteUser(@FormDataParam("id") int UserID, @CookieParam("token") String token){
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
         }
-
-    }
-
-    public static void DeleteUser(int UserID){
         try{
 
             //Lets you delete from the Login table
@@ -242,9 +231,10 @@ public class LogIn_Controller {
             ps.setInt(1,UserID);
             ps.executeUpdate();
 
-
+            return "{\"status\": \"OK\"}";
         }catch (Exception  e){
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
         }
     }
 

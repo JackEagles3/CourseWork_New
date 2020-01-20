@@ -116,20 +116,26 @@ public class SalesOrderDetails_Controller {
 
 
 
-    public static void DeleteSalesOrderDetails(int SaleID){
+    @POST
+    @Path("DeleteSalesOrderDetails")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String DeleteSalesOrderDetails(@FormDataParam("id") int SaleID,@FormDataParam("Itemid") int ItemID, @CookieParam("token") String token){
 
         try{
 
             //Lets you delete from the [Sales Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Sales Order Details] WHERE SaleID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Sales Order Details] WHERE SaleID = ? and ItemID = ?");
 
-            ps.setInt(SaleID,1);
+            ps.setInt(1,SaleID);
+            ps.setInt(2,ItemID);
 
             ps.executeUpdate();
-
+            return "{\"status\": \"OK\"}";
 
         }catch (Exception  e){
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
         }
     }
 

@@ -8,8 +8,46 @@
 </head>
 <body onload="pageLoad()">
 
+<div id="content">
+
+    <button id="backButton" onclick="ToItemDetails()">Back</button>
+    <p></p>
+    <div>
+        <h1 id=""></h1>
+
+        <form id="ItemDetailsForm">
+            <div class="ItemDiv">
+                <label for="ItemName">Itemname: </label>
+                <input type="text" name="ItemName" id="ItemName">
+            </div>
+            <div class="ItemDiv">
+                <label for="Price">Price: </label>
+                <input type="text" name="Price" id="Price">
+            </div>
+
+            <div class="ItemDiv" id ="Locations">
 
 
+            </div>
 
+            <div class="ItemDiv">
+                <label for="Quantity">Quantity: </label>
+                <input type="text" name="Quantity" id="Quantity">
+            </div>
+
+            <div class="ItemDiv">
+                <label for="RoleName">Rolename: </label>
+                <input type="text" name="RoleName" id="RoleName">
+            </div>
+
+            <div class="ItemDiv">
+                <button id="AddItemButton">Add Item</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 </body>
 </html>

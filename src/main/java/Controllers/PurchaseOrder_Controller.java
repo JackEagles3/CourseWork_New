@@ -15,7 +15,7 @@ public class PurchaseOrder_Controller {
 
 
     @GET
-    @Path("ShowUsers")
+    @Path("Read")
     @Produces(MediaType.APPLICATION_JSON)
     public String ReadPurchaseOrder(){
 
@@ -34,7 +34,7 @@ public class PurchaseOrder_Controller {
             while (results.next()){
 
                 JSONObject item = new JSONObject();
-                item.put("PurchaseId",results.getInt(1));
+                item.put("id",results.getInt(1));
                 item.put("Date", results.getString(2));
                 item.put("UserID",results.getInt(3));
 
@@ -107,9 +107,11 @@ public class PurchaseOrder_Controller {
 
 
 
-
-
-    public static void DetelePurchaseOrder(int PurchaseID){
+    @POST
+    @Path("DeletePurchaseOrder")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String DetelePurchaseOrder(@FormDataParam("id") int PurchaseID, @CookieParam("token") String token){
         try{
 
             //Lets you delete from the [Purchase Order] table
@@ -118,10 +120,11 @@ public class PurchaseOrder_Controller {
             ps.setInt(1,PurchaseID);
 
             ps.executeUpdate();
-
+            return "{\"status\": \"OK\"}";
 
         }catch (Exception  e){
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
         }
     }
 

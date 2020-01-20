@@ -33,12 +33,12 @@ h1 {
     font-size: 14pt;
 }
 
-#loginButton {
+#loginButton{
     width: 200px;
     background-color: #ed2fc4;
 }
 
-#loginButton:hover {
+#loginButton:hover{
     background-color: #ff01a2;
 }
 

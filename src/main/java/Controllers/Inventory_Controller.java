@@ -165,6 +165,7 @@ public class Inventory_Controller {
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
+        System.out.println("Wow");
         try {
 
             //Lets you insert into the Login table
@@ -181,7 +182,7 @@ public class Inventory_Controller {
 
 
             ps.executeUpdate();
-
+            System.out.println("AddedItem");
             return "{\"Success\"}";
 
 
@@ -226,7 +227,10 @@ public class Inventory_Controller {
     @Path("DeleteItem")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String DeleteItem(@FormDataParam("id") int ItemID) {
+    public String DeleteItem(@FormDataParam("id") int ItemID, @CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you delete from the [Sales Order Details] table

@@ -3,22 +3,22 @@
 function pageLoad() {
 
 
-    let LocationHtml = '<table>' +
+    let LocationHtml = '<table class = "tables" border="1" >' + //Starts off the html which will be added to the div, and creates the start of the table
         '<tr>' +
         '<th>Id</th>' +
         '<th class="last">Name</th>' +
 
         '</tr>';
 
-    fetch('/Location/ListLocations', {method: 'get'}).then(response => response.json()).then(Locations => {
+    fetch('/Location/ListLocations', {method: 'get'}).then(response => response.json()).then(Locations => { //Calls the API method for listing locations via the server
 
-        for (let LocationName of Locations) {
+        for (let LocationName of Locations) {//Goes through all of the locations and adds all the details to the table rows
 
             LocationHtml += `<tr>` +
                 `<td>${LocationName.id}</td>` +
                 `<td>${LocationName.Name}</td>` +
                 `<td class="last">` +
-                `<button class='editButton' data-id='${LocationName.id}'>Edit</button>  ` +
+                `<button class='editButton' data-id='${LocationName.id}'>Edit</button>  ` + //Adds buttons to the tables
                 `<button class='deleteButton' data-id='${LocationName.id}'>Delete</button>  ` +
                 `<button class='viewButton' data-id='${LocationName.id}'>View Location</button>`+
                 `</td>` +
@@ -26,7 +26,7 @@ function pageLoad() {
 
         }
 
-        LocationHtml += `<tr>` +
+        LocationHtml += `<tr>` +  //Adds the location of everywhere
             `<td></td>` +
             `<td>All</td>` +
             `<td class="last">` +
@@ -34,11 +34,13 @@ function pageLoad() {
             `</td>` +
             `</tr>`;
 
-        LocationHtml += `</table>`;
+        LocationHtml += `</table>`; //Closes Table
 
-        document.getElementById("listDiv").innerHTML = LocationHtml;
+        document.getElementById("listDiv").innerHTML = LocationHtml; //Adds the table html to the div to be displayed
         document.getElementById("LocationName").innerText = '';
 
+
+        //All of the code belows adds the functions to the buttons which are within the tables
         let editButtons = document.getElementsByClassName("editButton");
         for (let button of editButtons) {
             button.addEventListener("click", editLocation);
@@ -73,7 +75,7 @@ function viewLocation(event){
 
     const location = event.target.getAttribute("data-id");
 
-    window.location.href = "http://localhost:8081/client/ItemDetails.html?location="+location;
+    window.location.href = "/client/ItemDetails.html?location="+location;
 
 }
 
@@ -237,5 +239,8 @@ function checkLogin() {
     document.getElementById("loggedInDetails").innerHTML = logInHTML;
 
 }
+
+function LoadSalesOrder(){ window.location.href = "/client/saleOrder.html"}
+function LoadPurchaseOrder(){ window.location.href = "/client/purchaseOrder.html"}
 
 

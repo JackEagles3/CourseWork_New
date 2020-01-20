@@ -41,7 +41,7 @@ public class SalesOrder_Controller {
                 list.add(item);
 
             }
-
+            System.out.println("Yeet");
             return list.toString();
 
         }catch (Exception e){
@@ -112,8 +112,11 @@ public class SalesOrder_Controller {
 
 
 
-
-    public static void DeteleSalesOrder(int SaleID){
+    @POST
+    @Path("DeleteSalesOrder")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String DeteleSalesOrder(@FormDataParam("id") int SaleID, @CookieParam("token") String token){
 
 
         try{
@@ -124,10 +127,11 @@ public class SalesOrder_Controller {
             ps.setInt(1,SaleID);
 
             ps.executeUpdate();
-
+            return "{\"status\": \"OK\"}";
 
         }catch (Exception  e){
             System.out.println("Database error:" + e);
+            return "{\"error\": \"Unable to update item, please see server console for more info.\"}";
         }
     }
 

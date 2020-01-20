@@ -145,7 +145,10 @@ public class Location_Controller {
     @Path("DeleteLocation")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String DeleteLocation(@FormDataParam("id") int Location) {
+    public String DeleteLocation(@FormDataParam("id") int Location, @CookieParam("token") String token) {
+        if (!LogIn_Controller.validToken(token)) {
+            return "{\"error\": \"You don't appear to be logged in.\"}";
+        }
         try {
 
             //Lets you delete from the [Sales Order Details] table

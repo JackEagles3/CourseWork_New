@@ -85,40 +85,10 @@ public class Supplier_Controller {
     }
 
     @POST
-    @Path("UpdateSupplier")
+    @Path("DeleteSupplier")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateSupplier(@FormDataParam("SupplierId") int SupplierId, @FormDataParam("SupplierName") String SupplierName, @FormDataParam("ItemID") int ItemID, @FormDataParam("price") double price,@CookieParam("token") String token) {
-
-        if (!LogIn_Controller.validToken(token)) {
-            return "{\"error\": \"You don't appear to be logged in.\"}";
-        }
-        try {
-
-            //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Supplier] SET  SupplierName = ?,  ItemID = ?, Unit Price = ? WHERE SupplierID=?");
-
-            //Sets the values of the columns
-
-            ps.setInt(4, SupplierId);
-            ps.setString(1, SupplierName);
-            ps.setInt(2, ItemID);
-            ps.setDouble(3, price);
-
-
-            ps.executeUpdate();
-            return "{\"error\": \"Ok\"}";
-
-        } catch (Exception e) {
-            System.out.println("Database error:" + e);
-            return "{\"error\": \"Error\"}";
-        }
-    }
-
-
-
-
-    public String DeleteSupplier(int SupplierID){
+    public String DeleteSupplier(@FormDataParam("id") int SupplierID, @CookieParam("token") String token){
 
         try{
 
@@ -129,10 +99,10 @@ public class Supplier_Controller {
             ps.setInt(1,SupplierID);
             ps.executeUpdate();
 
-            return "Success";
+            return "{\"error\": \"Ok\"}";
         }catch (Exception  e){
             System.out.println("Database error:" + e);
-            return "error";
+            return "{\"error\": \"Error\"}";
         }
     }
 

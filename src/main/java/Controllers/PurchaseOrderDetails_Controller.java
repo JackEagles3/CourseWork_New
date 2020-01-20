@@ -111,20 +111,21 @@ public class PurchaseOrderDetails_Controller {
         }
     }
 
-
-
-
-
-    public String DeletePurchasesOrderDetails(int PurchaseID,@CookieParam("token") String token){
+    @POST
+    @Path("DeletePurchasesOrderDetails")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String DeletePurchasesOrderDetails(@FormDataParam("id") int PurchaseID, @FormDataParam("Itemid") int ItemID,@CookieParam("token") String token){
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
         try{
 
             //Lets you delete from the [Purchases Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Purchases Order Details] WHERE PurchaseID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Purchases Order Details] WHERE PurchaseID = ? and ItemID = ? ");
 
-            ps.setInt(PurchaseID,1);
+            ps.setInt(1,PurchaseID);
+            ps.setInt(1,ItemID);
 
             ps.executeUpdate();
             return "{\"error\": \"Ok\"}";
