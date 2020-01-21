@@ -2,12 +2,12 @@ function pageLoad(){
 
     fetch('/Location/ListLocations', {method: 'get'}).then(response => response.json()).then(Locations => { //Calls the API method for listing locations via the server
 
-        let LocationsHtml = `<label >Price: </label>` +
-            `<select name="Locations" id="Locations">`;
+        let LocationsHtml = `<label for="Location" form="ItemDetailsForm">Price: </label>` +
+            `<select name="Location" id="Locations" form="ItemDetailsForm">`;
 
 
         for (let LocationName of Locations) {//Goes through all of the locations and adds all the details to the table rows
-            LocationsHtml += `<option value="Location">${LocationName.Name}</option>`;
+            LocationsHtml += `<option value=${LocationName.id} id="Location">${LocationName.Name}</option>`;
         }
 
         LocationsHtml += `</select>`;
@@ -26,7 +26,7 @@ function AddItem(event) {
     const form = document.getElementById("ItemDetailsForm");
     const formData = new FormData(form);
 
-
+    debugger;
 
     fetch('/Inventory/AddItem', {method: 'post', body: formData}
     ).then(response => response.json()
@@ -40,3 +40,5 @@ function AddItem(event) {
     });
 
 }
+
+function index(){window.location.href = "http://localhost:8081/client/index.html";}

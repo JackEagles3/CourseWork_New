@@ -5,7 +5,8 @@ function pageLoad() {
         '<tr>' +
         '<th>ID</th>' +
         '<th>UserID</th>' +
-        '<th class="last">Date</th>' +
+        '<th>Date</th>' +
+        '<th class="last">Supplier</th>' +
         '</tr>';
 
     fetch('/PurchaseOrder/Read', {method: 'get'}).then(response => response.json()).then(Orders => { //Calls the API method for listing locations via the server
@@ -16,6 +17,7 @@ function pageLoad() {
                 `<td>${Order.id}</td>` +
                 `<td>${Order.UserID}</td>` +
                 `<td>${Order.Date}</td>` +
+                `<td>${Order.SupplierId}</td>` +
                 `<td class="last">` +
                 `<button class='view' data-id='${Order.id}'>View Sale Details</button> ` + //Adds buttons to the tables
                 `<button class='delete' data-id='${Order.id}'>Delete</button>` +
@@ -42,3 +44,5 @@ function pageLoad() {
 function viewDetails(){
 
 }
+
+function index(){window.location.href = "http://localhost:8081/client/index.html";}

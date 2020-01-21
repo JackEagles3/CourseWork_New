@@ -3,6 +3,7 @@
 function pageLoad() {
 
 
+
     let LocationHtml = '<table class = "tables" border="1" >' + //Starts off the html which will be added to the div, and creates the start of the table
         '<tr>' +
         '<th>Id</th>' +

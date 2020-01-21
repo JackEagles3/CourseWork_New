@@ -244,3 +244,4 @@ function LoadSalesOrder(){ window.location.href = "/client/saleOrder.html"}
 function LoadPurchaseOrder(){ window.location.href = "/client/purchaseOrder.html"}
 
 
+function index(){window.location.href = "http://localhost:8081/client/index.html";}

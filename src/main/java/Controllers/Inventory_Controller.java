@@ -197,7 +197,7 @@ public class Inventory_Controller {
     @Path("UpdateItem")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateItemDetails(@FormDataParam("ItemName") String ItemName, @FormDataParam("Price") double Price, @FormDataParam("Location") String Location, @FormDataParam("Quantity") int Quantity, @FormDataParam("RoleName") String RoleName, @FormDataParam("ItemId") int ItemId) {
+    public String UpdateItemDetails(@CookieParam("Item") int ItemID, @FormDataParam("ItemName") String ItemName, @FormDataParam("Price") double Price, @FormDataParam("Location") String Location, @FormDataParam("Quantity") int Quantity, @FormDataParam("RoleName") String RoleName) {
 
         try {
 
@@ -209,7 +209,7 @@ public class Inventory_Controller {
             ps.setString(3,Location);
             ps.setInt(4, Quantity);
             ps.setString(5, RoleName);
-            ps.setInt(6, ItemId);
+            ps.setInt(6, ItemID);
 
 
             ps.executeUpdate();

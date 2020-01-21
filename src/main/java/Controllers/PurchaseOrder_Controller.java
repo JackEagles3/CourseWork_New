@@ -37,6 +37,7 @@ public class PurchaseOrder_Controller {
                 item.put("id",results.getInt(1));
                 item.put("Date", results.getString(2));
                 item.put("UserID",results.getInt(3));
+                item.put("SupplierId", results.getString(4));
 
                 list.add(item);
 

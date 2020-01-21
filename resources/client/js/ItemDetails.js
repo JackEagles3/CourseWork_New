@@ -10,6 +10,9 @@ function editItem() {
 
 function pageLoad(){
 
+    Cookies.remove("Item");
+    Cookies.set("Item", -1);
+
     let LocationHtml = '<table>' + //Creates table
         '<tr>' +
         '<th>Id</th>' +
@@ -69,7 +72,7 @@ function pageLoad(){
 
     }else {
         //The below code does the exact same as above apart from it will list all the items instead of only the ones in a location
-        document.getElementById("ItemLocations").innerText += "Item Details in every locations";
+        document.getElementById("ItemLocations").innerText = "Item Details in every locations";
 
         fetch('/Inventory/List', {method: 'get'}).then(response => response.json()).then(Item => {
 
@@ -117,7 +120,10 @@ function addItem(){
     window.location.href = "http://localhost:8081/client/AddItem.html";
 }
 
-function editItem(){
+function editItem(event){
+
+    event.preventDefault();
+    Cookies.set("Item", event.target.getAttribute("data-id"));
     window.location.href = "http://localhost:8081/client/AddItem.html";
 
 }
