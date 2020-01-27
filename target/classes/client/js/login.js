@@ -72,7 +72,7 @@ function logout() {
 
             Cookies.remove("username");
             Cookies.remove("token");
-            Cookies.remove("Role")
+            Cookies.remove("Role");
 
             window.location.href = '/client/index.html';
 

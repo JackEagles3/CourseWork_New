@@ -10,6 +10,9 @@ function editItem() {
 
 function pageLoad(){
 
+    Cookies.remove("Item");
+    Cookies.set("Item", -1);
+
     let LocationHtml = '<table>' + //Creates table
         '<tr>' +
         '<th>Id</th>' +
@@ -117,7 +120,10 @@ function addItem(){
     window.location.href = "http://localhost:8081/client/AddItem.html";
 }
 
-function editItem(){
+function editItem(event){
+
+    event.preventDefault();
+    Cookies.set("Item", event.target.getAttribute("data-id"));
     window.location.href = "http://localhost:8081/client/AddItem.html";
 
 }

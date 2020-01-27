@@ -15,15 +15,16 @@ public class PurchaseOrderDetails_Controller {
 
 
     @GET
-    @Path("ReadPurchaseOrderDetails")
+    @Path("ReadPurchaseOrderDetails/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ReadPurchaseOrderDetails(){
+    public String ReadPurchaseOrderDetails(@PathParam("id") Integer id){
 
         JSONArray list = new JSONArray();
 
         try{
             //Selects all data from the database
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Purchase Orders detail]");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Purchase Orders detail] Where PurchaseID = ?");
+            ps.setInt(1, id);
 
 
             //Outputs all the data from the database
@@ -32,10 +33,13 @@ public class PurchaseOrderDetails_Controller {
             System.out.println("UserID,UserName,Password,RoleName");
 
             while (results.next()){
+                PreparedStatement ps2 = Main.db.prepareStatement("SELECT Name FROM Inventory WHERE ItemID = ?");
+                ps2.setInt(1,results.getInt(2));
+                ResultSet Name = ps2.executeQuery();
 
                 JSONObject item = new JSONObject();
                 item.put("PurchaseId",results.getInt(1));
-                item.put("ItemID", results.getString(2));
+                item.put("ItemID", Name.getInt(1));
                 item.put("Quantity",results.getInt(3));
                 item.put("Price",results.getDouble(4));
 
@@ -64,7 +68,7 @@ public class PurchaseOrderDetails_Controller {
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchases Order Details] (PurchaseID,ItemID, Quantity, Unit Price) VALUES (?,?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Orders detail] (PurchaseID,ItemID, Quantity, [Unit Price]) VALUES (?,?,?,?)");
 
             //Sets the values of the columns
 

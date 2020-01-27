@@ -1,32 +1,34 @@
 function pageLoad(){
 
-    fetch('/Location/ListLocations', {method: 'get'}).then(response => response.json()).then(Locations => { //Calls the API method for listing locations via the server
 
-        let LocationsHtml = `<label for="Location" form="ItemDetailsForm">Price: </label>` +
-            `<select name="Location" id="Locations" form="ItemDetailsForm">`;
+    if (Cookies.get("Item") === "-1") {
+        fetch('/Location/ListLocations', {method: 'get'}).then(response => response.json()).then(Locations => { //Calls the API method for listing locations via the server
 
-
-        for (let LocationName of Locations) {//Goes through all of the locations and adds all the details to the table rows
-            LocationsHtml += `<option value=${LocationName.id} id="Location">${LocationName.Name}</option>`;
-        }
-
-        LocationsHtml += `</select>`;
-        document.getElementById("Locations").innerHTML = LocationsHtml;
-    });
+            let LocationsHtml = `<label for="Location" form="ItemDetailsForm">Price: </label>` +
+                `<select name="Location" id="Locations" form="ItemDetailsForm">`;
 
 
-    document.getElementById("AddItemButton").addEventListener("click", AddItem);
+            for (let LocationName of Locations) {//Goes through all of the locations and adds all the details to the table rows
+                LocationsHtml += `<option value=${LocationName.id} id="Location">${LocationName.Name}</option>`;
+            }
+
+            LocationsHtml += `</select>`;
+            document.getElementById("Locations").innerHTML = LocationsHtml;
+        });
 
 
+        document.getElementById("AddItemButton").addEventListener("click", AddItem);
+
+    }
 }
 
 function AddItem(event) {
-    debugger;
+
     event.preventDefault();
     const form = document.getElementById("ItemDetailsForm");
     const formData = new FormData(form);
 
-    debugger;
+
 
     fetch('/Inventory/AddItem', {method: 'post', body: formData}
     ).then(response => response.json()

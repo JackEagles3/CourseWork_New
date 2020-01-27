@@ -13,12 +13,12 @@ function pageLoad() {
         for (let Order of Orders) {//Goes through all of the locations and adds all the details to the table rows
 
             OrderHtml += `<tr>` +
-                `<td>${Order.id}</td>` +
-                `<td>${Order.UserID}</td>` +
+                `<td>${Order.SaleID}</td>` +
+                `<td>${Order.UserId}</td>` +
                 `<td>${Order.Date}</td>` +
                 `<td class="last">` +
-                `<button class='view' data-id='${Order.id}'>View Sale Details</button> ` + //Adds buttons to the tables
-                `<button class='delete' data-id='${Order.id}'>Delete</button>` +
+                `<button class='view' data-id='${Order.SaleID}'>View Sale Details</button> ` + //Adds buttons to the tables
+                `<button class='delete' data-id='${Order.SaleID}'>Delete</button>` +
                 `</td>` +
                 `</tr>`;
 
@@ -38,6 +38,8 @@ function pageLoad() {
 
 
 }
+
+function index(){window.location.href = "http://localhost:8081/client/index.html";}
 
 function viewDetails(){
 

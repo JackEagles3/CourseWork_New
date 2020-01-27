@@ -23,12 +23,12 @@ function pageLoad(){
 }
 
 function AddItem(event) {
-    debugger;
+
     event.preventDefault();
     const form = document.getElementById("ItemDetailsForm");
     const formData = new FormData(form);
 
-    debugger;
+
 
     fetch('/Inventory/AddItem', {method: 'post', body: formData}
     ).then(response => response.json()
