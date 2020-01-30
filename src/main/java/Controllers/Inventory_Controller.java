@@ -82,15 +82,15 @@ public class Inventory_Controller {
     @GET
     @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getThing(@PathParam("id") Integer id) throws Exception {
-        if (id == null) {
+    public String getThing(@PathParam("id") int id) throws Exception {
+        if (id == 0) {
             throw new Exception("Thing's 'id' is missing in the HTTP request's URL.");
         }
 
         System.out.println("get/" + id);
         JSONObject item = new JSONObject();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT Name, Price, Location, Quantity FROM Inventory WHERE Id = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Name, Price, RoleName, Quantity FROM Inventory WHERE ItemId = ?");
             ps.setInt(1, id);
             ResultSet results = ps.executeQuery();
             if (results.next()) {
@@ -202,7 +202,7 @@ public class Inventory_Controller {
         try {
 
             //Lets you insert into the [Sales Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Inventory SET  ItemName = ?, Price = ?, Location = ?, Quantity = ?, RoleName = ? WHERE ItemId=?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Inventory SET  Name = ?, Price = ?, Location = ?, Quantity = ?, RoleName = ? WHERE ItemId=?");
 
             ps.setString(1,ItemName);
             ps.setDouble(2,Price);

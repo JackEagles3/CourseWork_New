@@ -61,7 +61,7 @@ public class LogIn_Controller {
 
         try{
             //Selects all data from the database
-            PreparedStatement ps = Main.db.prepareStatement("SELECT Password, RoleName FROM LogIn WHERE UserName = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Password, RoleName, UserID FROM LogIn WHERE UserName = ?");
 
             ps.setString(1,username);
 
@@ -83,6 +83,7 @@ public class LogIn_Controller {
 
                     JSONObject user = new JSONObject();
                     user.put("UserName", username);
+                    user.put("UserId", result.getInt(3));
                     user.put("token", token);
                     user.put("Role", result.getString(2));
 

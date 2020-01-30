@@ -10,7 +10,7 @@
 <body onload="pageLoad()">
 <div id="content">
     <div>
-        <button id="Back" onclick="index()">Back</button>       <button onclick="LoadSalesOrder()">Sales Order</button>        <button onclick="LoadPurchaseOrder()">Purchase Order</button>
+        <button id="Back" onclick="index()">Back to Index</button>       <button onclick="LoadSalesOrder()">Sales Order</button>        <button onclick="LoadPurchaseOrder()">Purchase Order</button>
         <p></p>
 
     </div>
@@ -23,9 +23,18 @@
 
     <div id="listDiv"></div>
 
+    <p id="new">To add new select supplier</p>
+    <div >
+        <form id="Add">
+            <div class="Supplier" id ="Supplier">
+
+
+            </div>
+        </form>
+    </div>
     <div>
         <p></p>
-        <button id="AddNew">Add New</button>
+        <button id="AddNew" onclick="addnew()">Add New</button>
     </div>
 </div>
 

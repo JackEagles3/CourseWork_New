@@ -9,6 +9,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Path("SalesOrder/")
 public class SalesOrder_Controller {
@@ -56,24 +58,26 @@ public class SalesOrder_Controller {
     @Path("AddSaleOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Date") String Date, @FormDataParam("Userid") int UserId,@CookieParam("token") String token) {
+    public String AddSaleOrder(@CookieParam("UserId") int UserId,@CookieParam("token") String token) {
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Sales Order] (SaleID,Date,UserID) VALUES (?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Sales Order] (Date,UserID) VALUES (?,?)");
 
             //Sets the values of the columns
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
 
-            ps.setInt(1, id);
-            ps.setString(2, Date);
-            ps.setInt(3, UserId);
+
+            ps.setString(1, dtf.format(now));
+            ps.setInt(2, UserId);
 
 
             ps.executeUpdate();
-            return "{\"error\": \"Ok\"}";
+            return "{\"Success\": \"Ok\"}";
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);
@@ -102,7 +106,7 @@ public class SalesOrder_Controller {
 
 
             ps.executeUpdate();
-            return "{\"error\": \"Ok\"}";
+            return "{\"Success\": \"Ok\"}";
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);

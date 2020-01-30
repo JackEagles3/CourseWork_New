@@ -1,12 +1,12 @@
 body {
-    background-color: #840c11;
+    background-color: #ffffff;
     margin: 0;
     font-family: 'Arial', serif;
 }
 
 h1 {
     margin-top:0;
-    color: #12710a;
+    color: #000000;
 }
 
 .tables{
@@ -15,7 +15,7 @@ h1 {
 }
 
 #content {
-    background-color: #ff0e11;
+    background-color: #242582;
     width: 60%;
     margin: 0 auto;
     min-height: 600px;
@@ -35,11 +35,18 @@ h1 {
 
 #loginButton{
     width: 200px;
-    background-color: #ed2fc4;
+    background-color: #F64c72;
 }
 
 #loginButton:hover{
-    background-color: #ff01a2;
+    background-color: #F64c72;
+}
+
+.button{
+    background-color: #F64c72;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 #loggedInDetails {
@@ -51,18 +58,18 @@ h1 {
 
 .deleteButton, #cancelButton {
     visibility: hidden;
-    background-color: #2C29C0;
+    background-color: #F64c72;
     margin-left: 10px;
 }
 
 .editButton {
     visibility: hidden;
-    background-color: #2c29c0;
+    background-color: #F64c72;
 }
 
 .viewButton {
     visibility: hidden;
-    background-color: #2C29C0;
+    background-color: #F64c72;
 }
 
 .editButton, .deleteButton, #saveButton, #cancelButton, #loginButton, .viewButton {

@@ -9,7 +9,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 @Path("PurchaseOrder/")
 public class PurchaseOrder_Controller {
 
@@ -28,8 +29,6 @@ public class PurchaseOrder_Controller {
 
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
-
-            System.out.println("UserID,UserName,Password,RoleName");
 
             while (results.next()){
 
@@ -57,19 +56,20 @@ public class PurchaseOrder_Controller {
     @Path("AddPurchaseOrder")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("Date") String Date, @FormDataParam("UserId") int UserId, @FormDataParam("Supplier") int SupplierId) {
+    public String AddPurchaseOrder(@CookieParam("UserId") int UserId, @FormDataParam("Supplier") int SupplierId) {
 
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (PurchaseID,Date,UserID,SupplierID) VALUES (?,?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Order] (Date,UserID,SupplierID) VALUES (?,?,?)");
 
             //Sets the values of the columns
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
 
-            ps.setInt(1, id);
-            ps.setString(2, Date);
-            ps.setInt(3, UserId);
-            ps.setInt(4, SupplierId);
+            ps.setString(1, dtf.format(now));
+            ps.setInt(2, UserId);
+            ps.setInt(3, SupplierId);
 
             ps.executeUpdate();
             return "{\"error\": \"Ok\"}";

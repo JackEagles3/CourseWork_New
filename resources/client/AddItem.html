@@ -5,18 +5,20 @@
     <script src="/client/js/AddDetails.js"></script>
     <link rel="shortcut icon" href="/client/favicon.ico" type="image/x-icon">
     <script src="/client/js/js.cookie.js"></script>
+    <!--Adds all the scripts and links which are needed for this page-->
     <title>Add Item</title>
 </head>
-<body onload="pageLoad()">
+<body onload="pageLoad()"> <!--Runs the JS pageload-->
 
-<div id="content">
+<div id="content"> <!--Main div-->
 
-    <button id="backButton" onclick="ToItemDetails()">Back</button>
-    <p></p>
+    <button id="backButton"  class="button" onclick="ToItemDetails()">Back</button> <!--Adds button to allow the page to go back to the previous page-->
+    <p></p> <!--Adds space between divs-->
     <div>
-        <h1 id=""></h1>
+        <h1></h1>
 
-        <form id="ItemDetailsForm">
+        <form id="ItemDetailsForm"> <!--Adds form which has each label for what the user can enter in-->
+
             <div class="ItemDiv">
                 <label for="ItemName">Item name: </label>
                 <input type="text" name="ItemName" id="ItemName">
@@ -26,7 +28,7 @@
                 <input type="text" name="Price" id="Price">
             </div>
 
-            <div class="ItemDiv" id ="Locations">
+            <div class="ItemDiv" id ="Locations"> <!--This is where the select html will be added via javascript -->
 
 
             </div>
@@ -42,13 +44,13 @@
             </div>
 
             <div class="ItemDiv">
-                <button id="AddItemButton">Add Item</button>
+                <button id="Confirm" class="button">Confirm</button> <button class="button" id="Add">Add New</button>  <!--Adds button which will allow the user to confirm and commit the new item-->
             </div>
 
-        </form>
+        </form> <!--Ends form-->
 
-    </div>
+    </div> <!--Ends Div-->
 
-</div>
+</div> <!--Ends div-->
 </body>
 </html>

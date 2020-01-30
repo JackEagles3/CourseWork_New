@@ -135,38 +135,38 @@ function deleteLocation(event) {
 
 
 
-    function saveEditLocation(event) {
+function saveEditLocation(event) {
 
-        console.log("I am about to SAVE!");
+
 
         event.preventDefault();
 
-        if (document.getElementById("LocationName").value.trim() === '') {
+        if (document.getElementById("LocationName").value.trim() === '') { //Gets the location name
             alert("Please provide a Location name.");
             return;
         }
 
 
-        const id = document.getElementById("LocationId").value;
-        const form = document.getElementById("LocationForm");
-        const formData = new FormData(form);
+        const id = document.getElementById("LocationId").value; //Gets Id of location
+        const form = document.getElementById("LocationForm"); //Gets new Location name
+        const formData = new FormData(form); //adds the form into form data
 
-        let apiPath = '';
+        let apiPath = ''; //Adds the correct path
         if (id === '') {
             apiPath = '/Location/AddLocation';
         } else {
             apiPath = '/Location/UpdateLocation';
         }
 
-        fetch(apiPath, {method: 'post', body: formData}
+        fetch(apiPath, {method: 'post', body: formData} //Fetches the correct api with the form data included
         ).then(response => response.json()
         ).then(responseData => {
 
             if (responseData.hasOwnProperty('error')) {
-                alert(responseData.error);
+                alert(responseData.error); //Alerts user of error if there is one
             }
 
-            pageLoad();
+            pageLoad(); //If there is no error, reload the page
         });
 
 

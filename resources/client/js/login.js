@@ -47,8 +47,8 @@ function login(event) {
                 Cookies.set("username", responseData.UserName);
                 Cookies.set("token", responseData.token);
                 Cookies.set("Role", responseData.Role);
+                Cookies.set("UserId", responseData.UserId);
 
-                console.log(Cookies.toString())
 
 
                 window.location.href = '/client/index.html';

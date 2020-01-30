@@ -30,16 +30,14 @@ public class PurchaseOrderDetails_Controller {
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
 
-            System.out.println("UserID,UserName,Password,RoleName");
+
 
             while (results.next()){
-                PreparedStatement ps2 = Main.db.prepareStatement("SELECT Name FROM Inventory WHERE ItemID = ?");
-                ps2.setInt(1,results.getInt(2));
-                ResultSet Name = ps2.executeQuery();
+
 
                 JSONObject item = new JSONObject();
                 item.put("PurchaseId",results.getInt(1));
-                item.put("ItemID", Name.getInt(1));
+                item.put("ItemID", results.getInt(2));
                 item.put("Quantity",results.getInt(3));
                 item.put("Price",results.getDouble(4));
 
@@ -61,7 +59,7 @@ public class PurchaseOrderDetails_Controller {
     @Path("AddPurchaseOrderDetail")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddPurchaseOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price,@CookieParam("token") String token) {
+    public String AddPurchaseOrder(@CookieParam("PurchaseId") int id,@FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price,@CookieParam("token") String token) {
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
@@ -71,14 +69,16 @@ public class PurchaseOrderDetails_Controller {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Purchase Orders detail] (PurchaseID,ItemID, Quantity, [Unit Price]) VALUES (?,?,?,?)");
 
             //Sets the values of the columns
+            System.out.println(id);
 
-            ps.setInt(1, id);
             ps.setInt(2, item);
             ps.setInt(3, quantity);
             ps.setInt(4, price);
+            ps.setInt(1,id);
 
             ps.executeUpdate();
-            return "{\"error\": \"Ok\"}";
+
+            return "{\"Success\": \"Ok\"}";
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);
@@ -90,24 +90,24 @@ public class PurchaseOrderDetails_Controller {
     @Path("UpdatePurchasesOrderDetails")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdatePurchasesOrderDetails(@CookieParam("token") String token,@FormDataParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
+    public String UpdatePurchasesOrderDetails(@CookieParam("token") String token,@CookieParam("PurchaseId") int id, @FormDataParam("ItemId") int item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") int price) {
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Purchases Order Details] SET  ItemID=?, Quantity=?, Unit Price=? WHERE PurchaseID=?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE [Purchase Orders detail] SET  Quantity=?, [Unit Price]=? WHERE PurchaseID=? and ItemID = ?");
 
             //Sets the values of the columns
 
-            ps.setInt(4, id);
-            ps.setInt(2, item);
-            ps.setInt(3, quantity);
-            ps.setInt(1, price);
+            ps.setInt(3, id);
+            ps.setInt(4, item);
+            ps.setInt(1, quantity);
+            ps.setInt(2, price);
 
             ps.executeUpdate();
-            return "{\"error\": \"Ok\"}";
+            return "{\"Success\": \"Ok\"}";
 
         } catch (Exception e) {
             System.out.println("Database error:" + e);
@@ -119,20 +119,20 @@ public class PurchaseOrderDetails_Controller {
     @Path("DeletePurchasesOrderDetails")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String DeletePurchasesOrderDetails(@FormDataParam("id") int PurchaseID, @FormDataParam("Itemid") int ItemID,@CookieParam("token") String token){
+    public String DeletePurchasesOrderDetails(@CookieParam("PurchaseId") int PurchaseID, @FormDataParam("id") int ItemID,@CookieParam("token") String token){
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
         try{
 
             //Lets you delete from the [Purchases Order Details] table
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Purchases Order Details] WHERE PurchaseID = ? and ItemID = ? ");
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM [Purchase Orders detail] WHERE PurchaseID = ? and ItemID = ? ");
 
             ps.setInt(1,PurchaseID);
-            ps.setInt(1,ItemID);
+            ps.setInt(2,ItemID);
 
             ps.executeUpdate();
-            return "{\"error\": \"Ok\"}";
+            return "{\"Success\": \"Ok\"}";
 
         }catch (Exception  e){
             System.out.println("Database error:" + e);

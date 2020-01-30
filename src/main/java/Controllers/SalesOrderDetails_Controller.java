@@ -10,22 +10,24 @@ import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+
+@Path("SalesOrderDetails/")
 public class SalesOrderDetails_Controller {
 
 
 
     @GET
-    @Path("ReadSalesOrderDetails")
+    @Path("ReadSalesOrderDetails/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ReadSalesOrderDetails(){
+    public String ReadSalesOrderDetails(@PathParam("id") Integer id){
 
         JSONArray list = new JSONArray();
 
         try{
             //Selects all data from the database
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Sales Order Details]");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM [Sales Order Details] where SaleID=?");
 
-
+            ps.setInt(1,id);
             //Outputs all the data from the database
             ResultSet results = ps.executeQuery();
 
@@ -57,14 +59,14 @@ public class SalesOrderDetails_Controller {
     @Path("AddSaleOrderDetail")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String AddSaleOrder(@FormDataParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price,@CookieParam("token") String token) {
+    public String AddSaleOrder(@FormDataParam("PurchaseId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price,@CookieParam("token") String token) {
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
         try {
 
             //Lets you insert into the Login table
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Sales Order] (SaleID,Date,UserID) VALUES (?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO [Sales Order Details] (SaleID,ItemID,Quantity, [Unit Price]) VALUES (?,?,?,?)");
 
             //Sets the values of the columns
 
@@ -88,7 +90,7 @@ public class SalesOrderDetails_Controller {
     @Path("UpdateSalesOrderDetails")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String UpdateSalesOrderDetails(@FormDataParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price,@CookieParam("token") String token) {
+    public String UpdateSalesOrderDetails(@CookieParam("SaleId") int id, @FormDataParam("Itemid") int Item, @FormDataParam("Quantity") int quantity, @FormDataParam("Price") double price,@CookieParam("token") String token) {
         if (!LogIn_Controller.validToken(token)) {
             return "{\"error\": \"You don't appear to be logged in.\"}";
         }
@@ -120,7 +122,7 @@ public class SalesOrderDetails_Controller {
     @Path("DeleteSalesOrderDetails")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String DeleteSalesOrderDetails(@FormDataParam("id") int SaleID,@FormDataParam("Itemid") int ItemID, @CookieParam("token") String token){
+    public String DeleteSalesOrderDetails(@CookieParam("PurchaseId") int SaleID,@FormDataParam("Itemid") int ItemID, @CookieParam("token") String token){
 
         try{
 
